@@ -20,7 +20,7 @@ export class PersonRepositoryImpl extends PersonRepository {
     }
 
     async getAllByPosition(type: Position): Promise<Person[]> {
-        const people = await this.dbRepository.createQueryBuilder('person').where('media.position = :type', { type }).getMany();
+        const people = await this.dbRepository.createQueryBuilder('person').where('person.position = :type', { type }).getMany();
         return people;
     }
 
