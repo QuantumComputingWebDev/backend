@@ -8,25 +8,16 @@ import { PersonApplicationService } from "../../application/person-application-s
 export function eventRoutesPlugin() {
     return async (app: FastifyInstance, options: FastifyPluginOptions, done: HookHandlerDoneFunction) => {
         app.get('/', async (request, reply) => {
-            if (!request.identity || !request.identity.isAuthenticated || !request.identity.user) {
-                throw new UnauthorizedError("identity invalid!");
-            }
             const service = request.container.get<EventApplicationService>(EventApplicationService);
             const events = await service.getAll();
             reply.status(200).send(events);
         });
         app.get<{ Params: { year: number, month: number, day: number } }>('/day/:year/:month/:day', { schema: { params: { year: { type: 'number' }, month: { type: 'number' }, day: { type: 'number' } } } }, async (request, reply) => {
-            if (!request.identity || !request.identity.isAuthenticated || !request.identity.user) {
-                throw new UnauthorizedError("identity invalid!");
-            }
             const service = request.container.get<EventApplicationService>(EventApplicationService);
             const events = await service.getDay(new Date(request.params.year, request.params.month, request.params.day));
             reply.status(200).send(events);
         });
         app.get<{ Params: { id: number } }>('/speech/:id', { schema: { params: { id: { type: 'number' } } } }, async (request, reply) => {
-            if (!request.identity || !request.identity.isAuthenticated || !request.identity.user) {
-                throw new UnauthorizedError("identity invalid!");
-            }
             const service = request.container.get<EventApplicationService>(EventApplicationService);
             const events = await service.getSpeech(request.params.id);
             reply.status(200).send(events);

@@ -10,9 +10,6 @@ const pump = util.promisify(pipeline);
 export function mediaRoutesPlugin() {
     return async (app: FastifyInstance, options: FastifyPluginOptions, done: HookHandlerDoneFunction) => {
         app.get('/', async (request, reply) => {
-            if (!request.identity || !request.identity.isAuthenticated || !request.identity.user) {
-                throw new UnauthorizedError("identity invalid!");
-            }
             const service = request.container.get<MediaApplicationService>(MediaApplicationService);
             const medias = await service.getAll();
             reply.status(200).send(medias);
@@ -32,17 +29,11 @@ export function mediaRoutesPlugin() {
             reply.status(200).send(media);
         });
         app.get('/gallery', async (request, reply) => {
-            if (!request.identity || !request.identity.isAuthenticated || !request.identity.user) {
-                throw new UnauthorizedError("identity invalid!");
-            }
             const service = request.container.get<MediaApplicationService>(MediaApplicationService);
             const medias = await service.getGallery();
             reply.status(200).send(medias);
         });
         app.get<{ Params: { id: number } }>('/:id', { schema: { params: { id: { type: 'number' } } } }, async (request, reply) => {
-            if (!request.identity || !request.identity.isAuthenticated || !request.identity.user) {
-                throw new UnauthorizedError("identity invalid!");
-            }
             const service = request.container.get<MediaApplicationService>(MediaApplicationService);
             const media = await service.get(request.params.id);
             reply.status(200).send(media);
