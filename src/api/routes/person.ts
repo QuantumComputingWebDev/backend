@@ -52,7 +52,7 @@ export function personRoutesPlugin() {
             }
             if (request.body.posterId) {
                 const photo = await mediaService.get(request.body.posterId);
-                person.photo = photo;
+                person.poster = photo;
             }
             person = await service.update(person);
             reply.status(200).send(person);
