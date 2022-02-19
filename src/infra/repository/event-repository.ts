@@ -12,13 +12,18 @@ export class EventRepositoryImpl extends EventRepository {
     dbSpeechRepository: Repository<EventSpeech>;
 
     async findSpeechById(id: number): Promise<EventSpeech> {
-        const event = await this.dbSpeechRepository.createQueryBuilder('event').where('event.id = :id', { id }).getOne();
+        const event = await this.dbSpeechRepository.findOne({
+            where: {
+                id: id
+            },
+            relations: ['speaker', 'poster']
+        });
         if (event) return event;
         throw new NotFoundError('event not found');
     }
 
     async getAll(): Promise<EventDay[]> {
-        const events = await this.dbDayRepository.find();
+        const events = await this.dbDayRepository.find({ relations: ['speechs', 'poster'] });
         return events;
     }
 
@@ -26,7 +31,8 @@ export class EventRepositoryImpl extends EventRepository {
         const events = await this.dbDayRepository.findOne({
             where: {
                 date: `= ${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
-            }
+            },
+            relations: ['speechs', 'poster']
         });
         if (events) return events;
         throw new NotFoundError('event not found');

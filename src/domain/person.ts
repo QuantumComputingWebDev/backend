@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { Column, Entity, IsNull, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, IsNull, JoinColumn, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Media } from './media';
 
 export enum Position {
@@ -15,11 +15,11 @@ export class Person {
     @Column()
     name: string;
 
-    @OneToOne(() => Media, { nullable: true })
+    @ManyToOne(() => Media, { nullable: true })
     @JoinColumn()
     photo: Media;
 
-    @OneToOne(() => Media, { nullable: true })
+    @ManyToOne(() => Media, { nullable: true })
     @JoinColumn()
     poster: Media;
 
