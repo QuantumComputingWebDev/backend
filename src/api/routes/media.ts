@@ -23,9 +23,10 @@ export function mediaRoutesPlugin() {
                 throw new BadRequestError('invalid file');
             }
             console.log(file)
-            await pump(file.file, fs.createWriteStream(`images/${new Date().toISOString()}-${file.filename}`))
+            const time = new Date().toISOString()
+            await pump(file.file, fs.createWriteStream(`images/${time}-${file.filename}`))
             const service = request.container.get<MediaApplicationService>(MediaApplicationService);
-            const media = await service.create(file.mimetype == 'video/mp4' ? MediaType.Video : MediaType.Photo, `/api/v1/static/${new Date().toISOString()}-${file.filename}`, request.query.gallery);
+            const media = await service.create(file.mimetype == 'video/mp4' ? MediaType.Video : MediaType.Photo, `/api/v1/static/${time}-${file.filename}`, request.query.gallery);
             reply.status(200).send(media);
         });
         app.get('/gallery', async (request, reply) => {
