@@ -15,7 +15,7 @@ export class EventDay {
     @JoinColumn()
     speechs: EventSpeech[];
 
-    @OneToOne(() => Media)
+    @OneToOne(() => Media, { nullable: true })
     poster: Media;
 }
 
@@ -40,7 +40,7 @@ export class EventSpeech {
     @JoinColumn()
     speaker: Person;
 
-    @OneToOne(() => Media)
+    @OneToOne(() => Media, { nullable: true })
     poster: Media;
 }
 

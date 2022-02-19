@@ -25,7 +25,7 @@ export class EventRepositoryImpl extends EventRepository {
     async getByDay(date: Date): Promise<EventDay> {
         const events = await this.dbDayRepository.findOne({
             where: {
-                date: `LIKE ${date.getDate()}`
+                date: `= ${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
             }
         });
         if (events) return events;
