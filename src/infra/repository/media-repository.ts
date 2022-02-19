@@ -9,28 +9,47 @@ export class MediaRepositoryImpl extends MediaRepository {
     dbRepository: Repository<Media>;
 
     async findById(id: number): Promise<Media> {
-        const media = await this.dbRepository.createQueryBuilder('media').where('media.id = :id', { id }).getOne();
-        if (media) return media;
+        const media = await this.dbRepository.findOne({
+            where: {
+                id: id
+            }
+        });
+        if (media) {
+            return media;
+        }
         throw new NotFoundError('media not found');
     }
 
     async getAll(): Promise<Media[]> {
-        const medias = await this.dbRepository.find();
+        const medias = (await this.dbRepository.find())
         return medias;
     }
 
     async getGallery(): Promise<Media[]> {
-        const medias = await this.dbRepository.createQueryBuilder('media').where('media.showInGallery').getMany();
+        const medias = (await this.dbRepository.find({
+            where: {
+                showInGallery: true
+            }
+        }))
         return medias;
     }
 
     async getAllByType(type: MediaType): Promise<Media[]> {
-        const medias = await this.dbRepository.createQueryBuilder('media').where('media.type = :type', { type }).getMany();
+        const medias = (await this.dbRepository.find({
+            where: {
+                type: type
+            }
+        }))
         return medias;
     }
 
     async getAllGalleryByType(type: MediaType): Promise<Media[]> {
-        const medias = await this.dbRepository.createQueryBuilder('media').where('media.showInGallery').andWhere('media.type = :type', { type }).getMany();
+        const medias = (await this.dbRepository.find({
+            where: {
+                showInGallery: true,
+                type: type
+            }
+        }))
         return medias;
     }
 
