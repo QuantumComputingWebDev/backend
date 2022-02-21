@@ -128,6 +128,7 @@ export function eventRoutesPlugin() {
             if (request.body.description) event.description = request.body.description;
             if (request.body.briefDescription) event.briefDescription = request.body.briefDescription;
             if (request.body.date) {
+                console.log(new Date(request.body.date))
                 event.day = await service.getDay(new Date(request.body.date))
             }
             event = await service.updateSpeech(event);

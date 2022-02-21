@@ -19,7 +19,7 @@ export class EventRepositoryImpl extends EventRepository {
             relations: ['speaker', 'poster']
         });
         if (event) return event;
-        throw new NotFoundError('event not found');
+        throw new NotFoundError('event speech not found');
     }
 
     async findDayById(id: number): Promise<EventDay> {
@@ -30,7 +30,7 @@ export class EventRepositoryImpl extends EventRepository {
             relations: ['speechs', 'poster', 'speechs.speaker', 'speechs.poster']
         });
         if (event) return event;
-        throw new NotFoundError('event not found');
+        throw new NotFoundError('event day not found');
     }
 
     async getAll(): Promise<EventDay[]> {
@@ -52,7 +52,7 @@ export class EventRepositoryImpl extends EventRepository {
             relations: ['speechs', 'poster', 'speechs.speaker', 'speechs.poster']
         });
         if (events) return events;
-        throw new NotFoundError('event not found');
+        throw new NotFoundError('event day not found');
     }
 
     async saveDay(event: EventDay): Promise<EventDay> {
