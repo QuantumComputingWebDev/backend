@@ -124,7 +124,7 @@ export function eventRoutesPlugin() {
             }
             if (request.body.title) event.title = request.body.title;
             if (request.body.startTime) event.startTime = request.body.startTime;
-            if (request.body.endTime) event.startTime = request.body.endTime;
+            if (request.body.endTime) event.endTime = request.body.endTime;
             if (request.body.description) event.description = request.body.description;
             if (request.body.briefDescription) event.briefDescription = request.body.briefDescription;
             if (request.body.date) {
