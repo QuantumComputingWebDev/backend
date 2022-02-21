@@ -27,7 +27,7 @@ export class EventRepositoryImpl extends EventRepository {
             where: {
                 id: id
             },
-            relations: ['speechs', 'poster', 'speechs.speaker', 'speechs.poster']
+            relations: ['speechs', 'poster', 'speechs.speaker', 'speechs.poster', 'speechs.speaker.photo']
         });
         if (event) return event;
         throw new NotFoundError('event day not found');
