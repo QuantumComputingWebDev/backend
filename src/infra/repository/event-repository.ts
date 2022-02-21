@@ -23,14 +23,20 @@ export class EventRepositoryImpl extends EventRepository {
     }
 
     async getAll(): Promise<EventDay[]> {
-        const events = await this.dbDayRepository.find({ relations: ['speechs', 'poster'] });
+        const events = await this.dbDayRepository.find({
+            where: {
+                isDeleted: false
+            },
+            relations: ['speechs', 'poster']
+        });
         return events;
     }
 
     async getByDay(date: Date): Promise<EventDay> {
         const events = await this.dbDayRepository.findOne({
             where: {
-                date: `= ${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+                date: `= ${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
+                isDeleted: false
             },
             relations: ['speechs', 'poster']
         });
@@ -50,7 +56,8 @@ export class EventRepositoryImpl extends EventRepository {
 
     async delete(event: EventDay | EventSpeech): Promise<void> {
         if (event instanceof EventDay) {
-            await this.dbDayRepository.delete(event);
+            event.isDeleted = true;
+            await this.dbDayRepository.save(event);
         } else {
             await this.dbSpeechRepository.delete(event);
         }

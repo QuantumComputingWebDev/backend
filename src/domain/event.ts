@@ -12,12 +12,14 @@ export class EventDay {
     date: string;
 
     @OneToMany(() => EventSpeech, e => e.day)
-    @JoinColumn()
     speechs: EventSpeech[];
 
     @ManyToOne(() => Media, { nullable: true })
     @JoinColumn()
     poster: Media;
+
+    @Column({ default: false })
+    isDeleted: boolean;
 }
 
 @Entity()
@@ -25,16 +27,16 @@ export class EventSpeech {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => EventDay, e => e.speechs)
+    @ManyToOne(() => EventDay, e => e.speechs, { cascade: false, onDelete: 'SET NULL', onUpdate: 'SET NULL', nullable: true })
     day: EventDay;
 
     @Column()
     title: string;
 
-    @Column()
+    @Column({ nullable: true })
     startTime: string;
 
-    @Column()
+    @Column({ nullable: true })
     endTime: string;
 
     @ManyToOne(() => Person)

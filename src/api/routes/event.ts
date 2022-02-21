@@ -95,6 +95,7 @@ export function eventRoutesPlugin() {
             }
             const service = request.container.get<EventApplicationService>(EventApplicationService);
             const event = await service.getDay(new Date(request.params.year, request.params.month, request.params.day));
+            console.log(event)
             await service.delete(event);
             reply.status(200).send(event);
         });
