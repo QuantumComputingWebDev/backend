@@ -67,7 +67,7 @@ export function eventRoutesPlugin() {
             event = await service.updateDay(event);
             reply.status(200).send(event);
         });
-        app.put<{ Params: { id: number }, Body: { posterId: number, speakerId: number, title: string, startTime: string, endTime: string } }>('/speech/:id', async (request, reply) => {
+        app.put<{ Params: { id: number }, Body: { posterId: number, speakerId: number, title: string, startTime: string, endTime: string, description: string, briefDescription: string } }>('/speech/:id', async (request, reply) => {
             if (!request.identity || !request.identity.isAuthenticated || !request.identity.user) {
                 throw new UnauthorizedError("identity invalid!");
             }
@@ -86,6 +86,8 @@ export function eventRoutesPlugin() {
             if (request.body.title) event.title = request.body.title;
             if (request.body.startTime) event.startTime = request.body.startTime;
             if (request.body.endTime) event.startTime = request.body.endTime;
+            if (request.body.description) event.description = request.body.description;
+            if (request.body.briefDescription) event.briefDescription = request.body.briefDescription;
             event = await service.updateSpeech(event);
             reply.status(200).send(event);
         });

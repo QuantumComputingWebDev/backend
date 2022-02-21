@@ -39,6 +39,12 @@ export class EventSpeech {
     @Column({ nullable: true })
     endTime: string;
 
+    @Column({ nullable: true })
+    description: string;
+
+    @Column({ nullable: true })
+    briefDescription: string;
+
     @ManyToOne(() => Person)
     @JoinColumn()
     speaker: Person;
