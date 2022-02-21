@@ -58,6 +58,23 @@ export function eventRoutesPlugin() {
             event = await service.updateSpeech(event);
             reply.status(200).send(event);
         });
+        app.post<{ Params: { dayId: number }, Body: { posterId: number, speakerId: number, title: string, startTime: string, endTime: string } }>('/speech/:dayId', async (request, reply) => {
+            if (!request.identity || !request.identity.isAuthenticated || !request.identity.user) {
+                throw new UnauthorizedError("identity invalid!");
+            }
+            const service = request.container.get<EventApplicationService>(EventApplicationService);
+            const mediaService = request.container.get<MediaApplicationService>(MediaApplicationService);
+            const personService = request.container.get<PersonApplicationService>(PersonApplicationService);
+            const day = await service.findDay(request.params.dayId);
+            const speaker = await personService.get(request.body.speakerId);
+            let event = await service.createSpeech(request.body.title, day, request.body.startTime, request.body.endTime, speaker);
+            if (request.body.posterId) {
+                const photo = await mediaService.get(request.body.posterId);
+                event.poster = photo;
+            }
+            event = await service.updateSpeech(event);
+            reply.status(200).send(event);
+        });
         app.put<{ Params: { year: number, month: number, day: number }, Body: { posterId: number } }>('/day/:year/:month/:day', async (request, reply) => {
             if (!request.identity || !request.identity.isAuthenticated || !request.identity.user) {
                 throw new UnauthorizedError("identity invalid!");
