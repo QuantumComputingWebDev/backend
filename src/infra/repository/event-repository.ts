@@ -38,7 +38,8 @@ export class EventRepositoryImpl extends EventRepository {
             where: {
                 isDeleted: false
             },
-            relations: ['speechs', 'poster', 'speechs.speaker', 'speechs.poster']
+            relations: ['speechs', 'poster', 'speechs.speaker', 'speechs.poster'],
+            order: { date: 'ASC' }
         });
         return events;
     }
