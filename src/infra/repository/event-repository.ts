@@ -27,7 +27,7 @@ export class EventRepositoryImpl extends EventRepository {
             where: {
                 isDeleted: false
             },
-            relations: ['speechs', 'poster', 'speechs.speaker']
+            relations: ['speechs', 'poster', 'speechs.speaker', 'speechs.poster']
         });
         return events;
     }
@@ -38,7 +38,7 @@ export class EventRepositoryImpl extends EventRepository {
                 date: `= ${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
                 isDeleted: false
             },
-            relations: ['speechs', 'poster', 'speechs.speaker']
+            relations: ['speechs', 'poster', 'speechs.speaker', 'speechs.poster']
         });
         if (events) return events;
         throw new NotFoundError('event not found');
