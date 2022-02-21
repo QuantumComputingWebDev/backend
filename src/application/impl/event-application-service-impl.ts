@@ -25,8 +25,12 @@ export class EventApplicationServiceImpl extends EventApplicationService {
         return await this.repo.saveSpeech(speech);
     }
 
-    async getSpeech(id: number): Promise<EventSpeech> {
+    async findSpeech(id: number): Promise<EventSpeech> {
         return await this.repo.findSpeechById(id);
+    }
+
+    async findDay(id: number): Promise<EventDay> {
+        return await this.repo.findDayById(id);
     }
 
     async getDay(date: Date): Promise<EventDay> {

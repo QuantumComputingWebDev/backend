@@ -22,7 +22,6 @@ export function mediaRoutesPlugin() {
             if (!file) {
                 throw new BadRequestError('invalid file');
             }
-            console.log(file)
             const time = new Date().toISOString()
             await pump(file.file, fs.createWriteStream(`images/${time}-${file.filename}`))
             const service = request.container.get<MediaApplicationService>(MediaApplicationService);

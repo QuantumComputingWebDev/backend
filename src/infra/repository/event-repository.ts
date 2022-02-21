@@ -22,6 +22,17 @@ export class EventRepositoryImpl extends EventRepository {
         throw new NotFoundError('event not found');
     }
 
+    async findDayById(id: number): Promise<EventDay> {
+        const event = await this.dbDayRepository.findOne({
+            where: {
+                id: id
+            },
+            relations: ['speechs', 'poster', 'speechs.speaker', 'speechs.poster']
+        });
+        if (event) return event;
+        throw new NotFoundError('event not found');
+    }
+
     async getAll(): Promise<EventDay[]> {
         const events = await this.dbDayRepository.find({
             where: {

@@ -57,6 +57,7 @@ export class EventSpeech {
 @injectable()
 export abstract class EventRepository {
     abstract findSpeechById(id: number): Promise<EventSpeech>;
+    abstract findDayById(id: number): Promise<EventDay>;
     abstract getAll(): Promise<EventDay[]>;
     abstract getByDay(date: Date): Promise<EventDay>;
     abstract saveDay(event: EventDay): Promise<EventDay>;

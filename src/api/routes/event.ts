@@ -17,9 +17,14 @@ export function eventRoutesPlugin() {
             const events = await service.getDay(new Date(request.params.year, request.params.month, request.params.day));
             reply.status(200).send(events);
         });
+        app.get<{ Params: { id: number } }>('/day/:id', { schema: { params: { id: { type: 'number' } } } }, async (request, reply) => {
+            const service = request.container.get<EventApplicationService>(EventApplicationService);
+            const events = await service.findDay(request.params.id);
+            reply.status(200).send(events);
+        });
         app.get<{ Params: { id: number } }>('/speech/:id', { schema: { params: { id: { type: 'number' } } } }, async (request, reply) => {
             const service = request.container.get<EventApplicationService>(EventApplicationService);
-            const events = await service.getSpeech(request.params.id);
+            const events = await service.findSpeech(request.params.id);
             reply.status(200).send(events);
         });
         app.post<{ Params: { year: number, month: number, day: number }, Body: { posterId: number } }>('/day/:year/:month/:day', async (request, reply) => {
@@ -67,6 +72,20 @@ export function eventRoutesPlugin() {
             event = await service.updateDay(event);
             reply.status(200).send(event);
         });
+        app.put<{ Params: { id: number }, Body: { posterId: number } }>('/day/:id', async (request, reply) => {
+            if (!request.identity || !request.identity.isAuthenticated || !request.identity.user) {
+                throw new UnauthorizedError("identity invalid!");
+            }
+            const service = request.container.get<EventApplicationService>(EventApplicationService);
+            const mediaService = request.container.get<MediaApplicationService>(MediaApplicationService);
+            let event = await service.findDay(request.params.id);
+            if (request.body.posterId) {
+                const photo = await mediaService.get(request.body.posterId);
+                event.poster = photo;
+            }
+            event = await service.updateDay(event);
+            reply.status(200).send(event);
+        });
         app.put<{ Params: { id: number }, Body: { posterId: number, speakerId: number, title: string, startTime: string, endTime: string, description: string, briefDescription: string } }>('/speech/:id', async (request, reply) => {
             if (!request.identity || !request.identity.isAuthenticated || !request.identity.user) {
                 throw new UnauthorizedError("identity invalid!");
@@ -74,7 +93,7 @@ export function eventRoutesPlugin() {
             const service = request.container.get<EventApplicationService>(EventApplicationService);
             const mediaService = request.container.get<MediaApplicationService>(MediaApplicationService);
             const personService = request.container.get<PersonApplicationService>(PersonApplicationService);
-            let event = await service.getSpeech(request.params.id);
+            let event = await service.findSpeech(request.params.id);
             if (request.body.posterId) {
                 const photo = await mediaService.get(request.body.posterId);
                 event.poster = photo;
@@ -97,7 +116,15 @@ export function eventRoutesPlugin() {
             }
             const service = request.container.get<EventApplicationService>(EventApplicationService);
             const event = await service.getDay(new Date(request.params.year, request.params.month, request.params.day));
-            console.log(event)
+            await service.delete(event);
+            reply.status(200).send(event);
+        });
+        app.delete<{ Params: { id: number } }>('/day/:id', { schema: { params: { id: { type: 'number' } } } }, async (request, reply) => {
+            if (!request.identity || !request.identity.isAuthenticated || !request.identity.user) {
+                throw new UnauthorizedError("identity invalid!");
+            }
+            const service = request.container.get<EventApplicationService>(EventApplicationService);
+            const event = await service.findDay(request.params.id);
             await service.delete(event);
             reply.status(200).send(event);
         });
@@ -106,7 +133,7 @@ export function eventRoutesPlugin() {
                 throw new UnauthorizedError("identity invalid!");
             }
             const service = request.container.get<EventApplicationService>(EventApplicationService);
-            const event = await service.getSpeech(request.params.id);
+            const event = await service.findSpeech(request.params.id);
             await service.delete(event);
             reply.status(200).send(event);
         });
